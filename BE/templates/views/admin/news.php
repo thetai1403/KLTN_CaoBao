@@ -10,7 +10,7 @@ layout('admin_sidebar');
             <p class="text-muted small mb-0">Quản lý, thao tác với các bài báo trong cơ sở dữ liệu.</p>
         </div>
         <div>
-            <a href="?module=dashboard&action=crawl_database" class="btn btn-outline-success shadow-sm rounded-pill px-4 me-2">
+            <a href="crawl_database.php" class="btn btn-outline-success shadow-sm rounded-pill px-4 me-2">
                 <i class="fa-solid fa-spider me-2"></i>Crawl Dữ Liệu
             </a>
             <a href="?module=admin&action=news_add" class="btn btn-primary shadow-sm rounded-pill px-4">
@@ -68,14 +68,14 @@ layout('admin_sidebar');
                                     </td>
                                     <td>
                                         <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1 rounded-pill fw-normal">
-                                            <?= htmlspecialchars($article['category_name'] ?? 'Tin tức') ?>
+                                            <?= htmlspecialchars($article['category'] ?? 'Tin tức') ?>
                                         </span>
                                     </td>
                                     <td>
                                         <i class="fa-regular fa-eye me-1 text-muted"></i> <?= number_format($article['view'] ?? 0) ?>
                                     </td>
                                     <td class="text-muted small">
-                                        <?= isset($article['created_at']) ? date('d/m/Y H:i', strtotime($article['created_at'])) : '---' ?>
+                                        <?= isset($article['pubdate']) ? date('d/m/Y H:i', strtotime($article['pubdate'])) : '---' ?>
                                     </td>
                                     <td class="text-end pe-4">
                                         <a href="<?= _HOST_URL ?>?module=news&action=detail&id=<?= $article['id'] ?? '' ?>" target="_blank" class="btn btn-sm btn-light text-success rounded-circle me-1" style="width: 32px; height: 32px; padding: 0; line-height: 32px;" title="Xem"><i class="fa-solid fa-eye"></i></a>
@@ -100,15 +100,51 @@ layout('admin_sidebar');
             </div>
             
             <div class="d-flex justify-content-between align-items-center mt-3 p-3 border-top bg-light bg-opacity-50">
-                <small class="text-muted">Hiển thị <?php echo count($news); ?> bài báo</small>
+                <small class="text-muted">Hiển thị <?= count($news) ?> trên tổng số <?= $totalRecords ?? 0 ?> bài báo</small>
+                
+                <?php if (isset($totalPages) && $totalPages > 1): ?>
                 <nav aria-label="Page navigation">
                     <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled"><a class="page-link border-0 text-muted bg-transparent" href="#">Trước</a></li>
-                        <li class="page-item active"><a class="page-link rounded-circle border-0 d-flex align-items-center justify-content-center mx-1 shadow-sm" style="width: 30px; height: 30px;" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link rounded-circle border-0 text-dark bg-transparent d-flex align-items-center justify-content-center mx-1" style="width: 30px; height: 30px;" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link border-0 text-muted bg-transparent" href="#">Sau</a></li>
+                        <!-- Nút Trước -->
+                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                            <a class="page-link border-0 text-muted bg-transparent" href="?module=admin&action=news&page=<?= $page - 1 ?>">Trước</a>
+                        </li>
+                        
+                        <!-- Lặp qua các số trang (rút gọn nếu quá nhiều trang tuỳ chọn) -->
+                        <?php 
+                        $startPage = max(1, $page - 2);
+                        $endPage = min($totalPages, $page + 2);
+                        
+                        // Luôn hiện trang 1
+                        if ($startPage > 1) {
+                            echo '<li class="page-item"><a class="page-link rounded-circle border-0 text-dark bg-transparent d-flex align-items-center justify-content-center mx-1" style="width: 30px; height: 30px;" href="?module=admin&action=news&page=1">1</a></li>';
+                            if ($startPage > 2) {
+                                echo '<li class="page-item disabled"><span class="page-link border-0 bg-transparent text-muted">...</span></li>';
+                            }
+                        }
+
+                        for ($i = $startPage; $i <= $endPage; $i++): 
+                        ?>
+                            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                                <a class="page-link rounded-circle border-0 <?= ($i == $page) ? 'd-flex align-items-center justify-content-center mx-1 shadow-sm' : 'text-dark bg-transparent d-flex align-items-center justify-content-center mx-1' ?>" style="width: 30px; height: 30px;" href="?module=admin&action=news&page=<?= $i ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        
+                        <?php if ($endPage < $totalPages): ?>
+                            <?php if ($endPage < $totalPages - 1): ?>
+                                <li class="page-item disabled"><span class="page-link border-0 bg-transparent text-muted">...</span></li>
+                            <?php endif; ?>
+                            <li class="page-item"><a class="page-link rounded-circle border-0 text-dark bg-transparent d-flex align-items-center justify-content-center mx-1" style="width: 30px; height: 30px;" href="?module=admin&action=news&page=<?= $totalPages ?>"><?= $totalPages ?></a></li>
+                        <?php endif; ?>
+
+                        <!-- Nút Sau -->
+                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                            <a class="page-link border-0 text-muted bg-transparent" href="?module=admin&action=news&page=<?= $page + 1 ?>">Sau</a>
+                        </li>
                     </ul>
                 </nav>
+                <?php endif; ?>
             </div>
         </div>
     </div>

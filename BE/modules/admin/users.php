@@ -3,13 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 1. KIỂM TRA QUYỀN ADMIN
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header("Location: ?module=admin&action=loginqtv");
     exit;
 }
 
-// 2. LẤY DỮ LIỆU USER 
 require_once __DIR__ . '/../../includes/session.php';
 global $conn;
 if (!isset($conn)) $conn = new mysqli("localhost", "root", "", "crawl_news");
@@ -26,10 +24,9 @@ if(empty($users)) {
     }
 }
 
-// 3. XÓA USER (NẾU CÓ REQUEST)
 if(isset($_GET['delete_id'])) {
     $del_id = (int)$_GET['delete_id'];
-    // Prevent delete self
+ 
     if($del_id !== (int)$_SESSION['user_id']) {
         $conn->query("DELETE FROM users WHERE id = $del_id");
         header("Location: ?module=admin&action=users");

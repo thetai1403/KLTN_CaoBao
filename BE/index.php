@@ -29,6 +29,14 @@ if (!empty($_GET['action'])){
     $action = $_GET['action'];
 }
 
+// Kiểm tra quyền truy cập admin
+if ($module === 'admin' && $action !== 'loginqtv') {
+    if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+        header("Location: ?module=admin&action=loginqtv");
+        exit;
+    }
+}
+
 $path = 'modules/'. $module. '/'. $action . '.php';
 
 if(!empty($path)){

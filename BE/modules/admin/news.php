@@ -13,49 +13,42 @@ require_once __DIR__ . '/../../includes/session.php';
 global $conn;
 if (!isset($conn)) $conn = new mysqli("localhost", "root", "", "crawl_news");
 
-$sql = "SELECT n.*, c.name as category_name FROM crawl_news n LEFT JOIN category c ON n.category_id = c.id ORDER BY n.id DESC LIMIT 50";
-$news = [];
+// Pagination
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 100; 
+$offset = ($page - 1) * $limit;
 
-try {
-    if (function_exists('getAll')) {
-        $news = getAll($sql);
-    }
-    
-    if (empty($news)) {
-        $result = $conn->query($sql);
-        if($result) {
-            while($row = $result->fetch_assoc()) {
-                $news[] = $row;
-            }
-        }
-    }
-} catch(Exception $e) {
-    try {
-        $sql2 = "SELECT * FROM crawl_news ORDER BY id DESC LIMIT 50";
-        if (function_exists('getAll')) {
-            $news = getAll($sql2);
-        }
-        if (empty($news)) {
-            $result2 = $conn->query($sql2);
-            if($result2) {
-                while($row = $result2->fetch_assoc()) {
-                    $news[] = $row;
-                }
-            }
-        }
-    } catch (Exception $e2) {
-        $news = [];
+// Count
+$totalRecords = 0;
+$countSql = "SELECT COUNT(id) as total FROM crawl_news";
+$countResult = $conn->query($countSql);
+if ($countResult && $row = $countResult->fetch_assoc()) {
+    $totalRecords = $row['total'];
+}
+$totalPages = ceil($totalRecords / $limit);
+
+// Lấy danh sách, uu tiên mới nhất dựa trên pubdate
+$sql = "SELECT * FROM crawl_news ORDER BY pubdate DESC, id DESC LIMIT $limit OFFSET $offset";
+$news = [];
+$result = $conn->query($sql);
+if ($result) {
+    while($row = $result->fetch_assoc()) {
+        $news[] = $row;
     }
 }
 
 // XÓA NEWS 
 if(isset($_GET['delete_id'])) {
     $del_id = (int)$_GET['delete_id'];
-    $conn->query("DELETE FROM news WHERE id = $del_id");
+    $conn->query("DELETE FROM crawl_news WHERE id = $del_id");
     header("Location: ?module=admin&action=news");
     exit;
 }
 
 renderView('admin/news', [
-    'news' => $news
+    'news' => $news,
+    'page' => $page,
+    'totalPages' => $totalPages,
+    'totalRecords' => $totalRecords,
+    'limit' => $limit
 ]);

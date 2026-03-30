@@ -13,8 +13,6 @@ require_once __DIR__ . '/../../includes/session.php';
 global $conn;
 if (!isset($conn)) $conn = new mysqli("localhost", "root", "", "crawl_news");
 
-// Lấy danh sách bình luận (giả sử bảng tên là comments)
-// LEFT JOIN để lấy tên user và tiêu đề bài báo nếu có
 $sql = "SELECT c.*, u.fullname, n.title as news_title 
         FROM comments c 
         LEFT JOIN users u ON c.user_id = u.id 
@@ -53,7 +51,6 @@ try {
     }
 }
 
-// XÓA BÌNH LUẬN (NẾU CÓ REQUEST)
 if(isset($_GET['delete_id'])) {
     $del_id = (int)$_GET['delete_id'];
     $conn->query("DELETE FROM comments WHERE id = $del_id");

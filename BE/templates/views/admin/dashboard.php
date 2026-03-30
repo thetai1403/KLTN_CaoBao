@@ -109,7 +109,7 @@ layout('admin_sidebar');
                             <span class="fw-bold"><i class="fa-solid fa-comments me-2"></i>Duyệt Bình Luận <span class="badge bg-danger ms-2 rounded-pill">12</span></span>
                             <i class="fa-solid fa-chevron-right opacity-50"></i>
                         </a>
-                        <a href="?module=dashboard&action=crawl_database" class="btn btn-outline-success text-start px-4 py-3 d-flex justify-content-between align-items-center rounded-3">
+                        <a href="crawl_database.php" class="btn btn-outline-success text-start px-4 py-3 d-flex justify-content-between align-items-center rounded-3">
                             <span class="fw-bold"><i class="fa-solid fa-spider me-2"></i>Chạy Thu Thập Dữ Liệu</span>
                             <i class="fa-solid fa-chevron-right opacity-50"></i>
                         </a>
