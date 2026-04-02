@@ -13,7 +13,7 @@
     <link href="templates/assets/css/chatbot.css" rel="stylesheet">
     <link href="templates/assets/css/search.css" rel="stylesheet">
     <link href="templates/assets/css/buttons.css" rel="stylesheet">
-    <script src="templates/assets/js/news.js?v=1" defer></script>
+    <script src="templates/assets/js/news.js?v=2" defer></script>
     <script src="templates/assets/js/chatbot.js?v=1" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>

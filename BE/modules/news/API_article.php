@@ -20,6 +20,9 @@ $current = $mysqli->query("SELECT id, title, category, source, pubDate FROM craw
 if (!$current)
     exit(json_encode(["error" => "Không tìm thấy bài báo"]));
 
+// Tăng lượt xem (view)
+$mysqli->query("UPDATE crawl_news SET view = view + 1 WHERE id = $articleId");
+
 
 $fallback = [];
 $offset = ($page - 1) * $perPage;
