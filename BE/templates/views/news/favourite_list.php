@@ -26,12 +26,12 @@
             <?php else: ?>
             <?php foreach ($listFav as $item): ?>
             <div class="fav-item" id="fav-<?= $item['news_id'] ?>">
-                <a href="<?= htmlspecialchars($item['link']) ?>" target="_blank">
+                <a href="<?= htmlspecialchars($item['link']) ?>" target="_blank" onclick="fetch('modules/news/track_view.php?id=<?= $item['news_id'] ?>')">
                     <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>">
                 </a>
                 <div class="fav-info">
                     <h5>
-                        <a href="<?= htmlspecialchars($item['link']) ?>" target="_blank">
+                        <a href="<?= htmlspecialchars($item['link']) ?>" target="_blank" onclick="fetch('modules/news/track_view.php?id=<?= $item['news_id'] ?>')">
                             <?= htmlspecialchars($item['title']) ?>
                         </a>
                     </h5>

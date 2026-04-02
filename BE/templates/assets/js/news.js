@@ -53,12 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>
               </div>
 
-              <a href="${item.link}" target="_blank">
+              <a href="${item.link}" target="_blank" onclick="fetch('modules/news/track_view.php?id=${item.id}')">
                 <img src="${item.image}" alt="${item.title}">
               </a>
 
               <h2>
-                <a href="${item.link}" target="_blank">${item.title}</a>
+                <a href="${item.link}" target="_blank" onclick="fetch('modules/news/track_view.php?id=${item.id}')">${item.title}</a>
               </h2>
             </div>
           `;
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const hotItem = document.createElement("article");
             hotItem.className = "side-news__item";
             hotItem.innerHTML = `
-            <a href="${item.link}" target="_blank">
+            <a href="${item.link}" target="_blank" onclick="fetch('modules/news/track_view.php?id=${item.id}')">
               ${item.title}
             </a>
           `;
@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const aImg = document.createElement("a");
           aImg.href = item.link;
           aImg.target = "_blank";
+          aImg.setAttribute("onclick", `fetch('modules/news/track_view.php?id=${item.id}')`);
           aImg.innerHTML = `<img src="${item.image}" alt="${item.title}" loading="lazy">`;
           article.appendChild(aImg);
 
@@ -127,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           info.innerHTML = `
           <h4>
-            <a href="${item.link}" target="_blank">${item.title}</a>
+            <a href="${item.link}" target="_blank" onclick="fetch('modules/news/track_view.php?id=${item.id}')">${item.title}</a>
           </h4>
           <div class="meta">
             <span>${item.source}</span> • <span>${item.pubDate}</span>
@@ -211,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
       article.style.opacity = isFallback ? "1" : "0";
 
       article.innerHTML = `
-      <a href="${item.link}" target="_blank" class="img-link">
+      <a href="${item.link}" target="_blank" class="img-link" onclick="fetch('modules/news/track_view.php?id=${item.id}')">
         <img src="${item.image}" alt="${item.title}" loading="lazy">
       </a>
       <div class="related-info">
@@ -225,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
       article.querySelector(".title-link").addEventListener("click", (e) => {
         e.preventDefault();
+        fetch('modules/news/track_view.php?id=' + item.id);
         markAsViewedAndLoadAI(item);
         setTimeout(() => window.open(item.link, "_blank"), 300);
       });

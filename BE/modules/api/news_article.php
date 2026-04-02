@@ -18,10 +18,20 @@ if ($articleId <= 0) {
     exit;
 }
 $current = $mysqli->query("SELECT id, title, category, source, pubDate FROM crawl_news WHERE id=$articleId LIMIT 1")->fetch_assoc();
+<<<<<<< HEAD:BE/modules/api/news_article.php
 if (!$current) {
     echo json_encode(["status" => "error", "message" => "Không tìm thấy bài báo"]);
     exit;
 }
+=======
+if (!$current)
+    exit(json_encode(["error" => "Không tìm thấy bài báo"]));
+
+// Tăng lượt xem (view)
+$mysqli->query("UPDATE crawl_news SET view = view + 1 WHERE id = $articleId");
+
+
+>>>>>>> 9867f20bffef31d4d6f207bbef59112683c4109b:BE/modules/news/API_article.php
 $fallback = [];
 $offset = ($page - 1) * $perPage;
 $stmt = $mysqli->prepare("
